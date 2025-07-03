@@ -137,3 +137,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
 if (OpenCV_FOUND)
     target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 endif ()
+
+target_link_libraries(${PROJECT_NAME} dl)
+
