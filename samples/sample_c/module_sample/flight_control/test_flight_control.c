@@ -1366,6 +1366,7 @@ bool DjiTest_FlightControlGoHomeAndConfirmLanding(void)
             s_osalHandler->TaskSleepMs(1000);
             if (DJI_AIRCRAFT_TYPE_M3E == aircraftInfoBaseInfo.aircraftType || DJI_AIRCRAFT_TYPE_M3T == aircraftInfoBaseInfo.aircraftType
                 || DJI_AIRCRAFT_TYPE_M3D == aircraftInfoBaseInfo.aircraftType || DJI_AIRCRAFT_TYPE_M3TD == aircraftInfoBaseInfo.aircraftType
+                || DJI_AIRCRAFT_TYPE_M3TA == aircraftInfoBaseInfo.aircraftType
                 || DJI_AIRCRAFT_TYPE_M4T == aircraftInfoBaseInfo.aircraftType
                 || DJI_AIRCRAFT_TYPE_M4TD == aircraftInfoBaseInfo.aircraftType
                 || DJI_AIRCRAFT_TYPE_M4D == aircraftInfoBaseInfo.aircraftType
@@ -1672,7 +1673,7 @@ DjiTest_FlightControlJoystickCtrlAuthSwitchEventCallback(T_DjiFlightControllerJo
     return DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS;
 }
 
-static T_DjiReturnCode DjiTest_FlightControlSetFtsTrigger(E_DjiMountPosition position, char* desc)
+static T_DjiReturnCode DjiTest_FlightControlSetFtsTrigger(E_DjiMountPosition position, const char* desc)
 {
     T_DjiReturnCode djiStat;
     T_DjiFtsPwmEscTriggerStatus esc_status;
@@ -1702,7 +1703,7 @@ static T_DjiReturnCode DjiTest_FlightControlSetFtsTrigger(E_DjiMountPosition pos
     return djiStat;
 }
 
-T_DjiReturnCode DjiTest_FlightControlFtsPwmTriggerSample(void)
+T_DjiReturnCode DjiTest_FlightControlFtsPwmTriggerSample(E_DjiMountPosition position, const char* port_name)
 {
     T_DjiReturnCode returnCode;
 
@@ -1711,14 +1712,9 @@ T_DjiReturnCode DjiTest_FlightControlFtsPwmTriggerSample(void)
         USER_LOG_ERROR("Init flight Control sample failed,error code:0x%08llX", returnCode);
         return returnCode;
     }
-    returnCode = DjiTest_FlightControlSetFtsTrigger(DJI_MOUNT_POSITION_EXTENSION_PORT, "DJI_MOUNT_POSITION_EXTENSION_PORT");
+    returnCode = DjiTest_FlightControlSetFtsTrigger(position, port_name);
     if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Test select DJI_MOUNT_POSITION_EXTENSION_PORT fts pwm trigger failed");
-        return returnCode;
-    }
-    returnCode = DjiTest_FlightControlSetFtsTrigger(DJI_MOUNT_POSITION_EXTENSION_LITE_PORT, "DJI_MOUNT_POSITION_EXTENSION_LITE_PORT");
-    if (returnCode != DJI_ERROR_SYSTEM_MODULE_CODE_SUCCESS) {
-        USER_LOG_ERROR("Test select DJI_MOUNT_POSITION_EXTENSION_LITE_PORT fts pwm trigger failed");
+        USER_LOG_ERROR("Test select %s fts pwm trigger failed", port_name);
         return returnCode;
     }
 
